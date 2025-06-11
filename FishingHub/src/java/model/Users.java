@@ -21,24 +21,10 @@ public class Users {
     }
 
     // Constructor đầy đủ
-    public Users(int userId, String fullName, String email, String phone, String password, String googleId,
-            int roleId, String gender, Date dateOfBirth, String location, Timestamp createdAt) {
-        this.userId = userId;
-        this.fullName = fullName;
-        this.email = email;
-        this.phone = phone;
-        this.password = password;
-        this.googleId = googleId;
-        this.roleId = roleId;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.location = location;
-        this.createdAt = createdAt;
-    }
-
     // Constructor dùng khi đăng ký (không có userId, googleId, createdAt)
     public Users(String fullName, String email, String phone, String password, int roleId,
             String gender, Date dateOfBirth, String location) {
+
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
@@ -142,6 +128,7 @@ public class Users {
 
     @Override
     public String toString() {
+
         return "Users{"
                 + "userId=" + userId
                 + ", fullName='" + fullName + '\''

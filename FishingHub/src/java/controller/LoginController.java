@@ -8,7 +8,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "LoginController", urlPatterns = {"/login"})
+@WebServlet(name = "LoginController", urlPatterns = { "/login" })
 public class LoginController extends HttpServlet {
     UserDao db = new UserDao();
 
@@ -24,16 +24,22 @@ public class LoginController extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            response.sendRedirect("Home.jsp");  // Chuyển đến trang chính
+            
+            // Check roleId and redirect accordingly
+            if (user.getRoleId() == 3) {
+                response.sendRedirect("dashboard_admin/Dashboard.jsp");
+            } else {
+                response.sendRedirect("Home.jsp");
+            }
         } else {
             request.setAttribute("error", "Invalid email or password");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
+            request.getRequestDispatcher("/Login.jsp").forward(request, response);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("Login.jsp").forward(request, response);
+        request.getRequestDispatcher("/Login.jsp").forward(request, response);
     }
 }

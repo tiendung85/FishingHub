@@ -6,6 +6,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="model.Users" %>
+<%
+    Users currentUser = (Users) session.getAttribute("user");
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -63,10 +67,20 @@
                             class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-white">3</span>
                     </div>
 
-                    <button class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap">Log In</button>
-                    <button
-                        class="bg-white text-primary border border-primary px-4 py-2 rounded-button whitespace-nowrap">Sign
-                        Up</button>
+                    <% if (currentUser == null) { %>
+                        <a href="Login.jsp" class="bg-primary text-white px-4 py-2 rounded-button whitespace-nowrap">Đăng Nhập</a>
+                        <a href="Register.jsp" class="bg-white text-primary border border-primary px-4 py-2 rounded-button whitespace-nowrap">Đăng Ký</a>
+                    <% } else { %>
+                        <div class="flex items-center space-x-3">
+                            <span class="font-semibold text-primary"><i class="ri-user-line mr-1"></i> <%= currentUser.getFullName() %></span>
+                            <% if(currentUser.getRoleId() == 2) { %>
+                                <a href="dashboard_owner/Dashboard.jsp" class="bg-secondary text-white px-4 py-2 rounded-button whitespace-nowrap hover:bg-secondary/90">Dashboard</a>
+                            <% } %>
+                            <form action="logout" method="post" style="display:inline;">
+                                <button type="submit" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-button hover:bg-gray-300">Đăng Xuất</button>
+                            </form>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </header>

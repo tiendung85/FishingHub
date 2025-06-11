@@ -6,7 +6,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "LogoutController", urlPatterns = {"/logout"})
+@WebServlet(name = "LogoutController", urlPatterns = { "/logout" })
 public class LogoutController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -15,6 +15,6 @@ public class LogoutController extends HttpServlet {
         if (session != null) {
             session.invalidate();
         }
-        response.sendRedirect("Login.jsp");
+        response.sendRedirect("Home.jsp");
     }
 }
