@@ -12,9 +12,9 @@ GO
 DROP DATABASE FishingHub;
 GO
 
-CREATE DATABASE FishingHub1;
+CREATE DATABASE FishingHub;
 GO
-USE FishingHub1;
+USE FishingHub;
 GO
 
 -- Roles
@@ -171,7 +171,6 @@ CREATE TABLE Event (
     EndTime DATETIME NOT NULL,
     Status NVARCHAR(20) DEFAULT 'pending' CHECK (Status IN ('pending', 'approved', 'rejected')),
     CreatedAt DATETIME DEFAULT GETDATE(),
-
     ApprovedAt DATETIME,
     PosterUrl NVARCHAR(255), 
     MaxParticipants INT,
@@ -183,6 +182,8 @@ CREATE TABLE Event (
 CREATE TABLE EventParticipant (
     EventId INT NOT NULL,
     UserId INT NOT NULL,
+	NumberPhone INT NOT NULL,
+	Email VARCHAR (255) NOT Null,
     PRIMARY KEY (EventId, UserId),
     FOREIGN KEY (EventId) REFERENCES Event(EventId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId)
@@ -192,16 +193,11 @@ CREATE TABLE EventParticipant (
 CREATE TABLE Post (
     PostId INT PRIMARY KEY IDENTITY,
     UserId INT,
-<<<<<<< HEAD
-	Topic NVARCHAR(50),
-    Title NVARCHAR(255),
-    Content TEXT,
-   
-=======
+
     Topic NVARCHAR(50),
     Title NVARCHAR(255),
     Content NVARCHAR(MAX),
->>>>>>> master
+
     CreatedAt DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (UserId) REFERENCES Users(UserId) 
 );

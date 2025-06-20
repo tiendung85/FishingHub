@@ -78,7 +78,7 @@ public class EventController extends HttpServlet {
             if (title == null || description == null || location == null
                     || startTimeStr == null || endTimeStr == null || maxParticipantsStr == null
                     || title.trim().isEmpty() || description.trim().isEmpty() || location.trim().isEmpty()) {
-                request.setAttribute("error", "All fields except poster image are required.");
+                request.setAttribute("error", "Vui lòng điền đầy đủ tất cả các trường thông tin.");
                 request.getRequestDispatcher("EventForm.jsp").forward(request, response);
                 return;
             }

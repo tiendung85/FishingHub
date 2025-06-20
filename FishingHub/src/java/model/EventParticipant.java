@@ -12,6 +12,8 @@ package model;
 public class EventParticipant {
     private int eventId;
     private int userId;
+    private int numberPhone;
+    private String email;
 
     public EventParticipant() {
     }
@@ -30,6 +32,22 @@ public class EventParticipant {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getNumberPhone() {
+        return numberPhone;
+    }
+
+    public void setNumberPhone(int numberPhone) {
+        this.numberPhone = numberPhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
     
     
