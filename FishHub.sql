@@ -182,8 +182,11 @@ CREATE TABLE Event (
 CREATE TABLE EventParticipant (
     EventId INT NOT NULL,
     UserId INT NOT NULL,
-	NumberPhone INT NOT NULL,
+	NumberPhone VARCHAR(11) NOT NULL,
 	Email VARCHAR (255) NOT Null,
+	CCCD VARCHAR(20),
+    Checkin BIT DEFAULT 0,
+	CheckinTime DATETIME, 
     PRIMARY KEY (EventId, UserId),
     FOREIGN KEY (EventId) REFERENCES Event(EventId),
     FOREIGN KEY (UserId) REFERENCES Users(UserId)
@@ -673,6 +676,16 @@ VALUES
 (N'Sự kiện giao lưu miền Trung', N'Hồ Khe Sanh', N'Câu cá và trao đổi kinh nghiệm.', N'Quảng Trị', 4, DATEADD(DAY, -14, GETDATE()), DATEADD(DAY, -13, GETDATE()), 'approved', GETDATE(), N'images (4).jpg', 55, 37),
 (N'Hội thi câu cá sinh viên', N'Hồ Thủ Đức', N'Dành cho các bạn sinh viên.', N'TP.HCM', 4, DATEADD(DAY, -5, GETDATE()), DATEADD(DAY, -4, GETDATE()), 'approved', GETDATE(), 'images.jpg', 90, 60);
 
+CREATE TABLE EventNotification (
+    NotificationId INT IDENTITY PRIMARY KEY,
+    EventId INT NOT NULL,
+    SenderId INT NOT NULL, 
+	Title NVARCHAR(255),
+    Message NVARCHAR(MAX),
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (EventId) REFERENCES Event(EventId),
+    FOREIGN KEY (SenderId) REFERENCES Users(UserId)
+);
 -- 5 sự kiện đang diễn ra
 INSERT INTO Event (Title, LakeName, Description, Location, HostId, StartTime, EndTime, Status, ApprovedAt, PosterUrl, MaxParticipants, CurrentParticipants)
 VALUES

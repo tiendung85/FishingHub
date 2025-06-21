@@ -236,10 +236,16 @@
                         <form id="registerForm" action="" method="POST">
                             <input type="hidden" name="action" value="register">
                             <div class="mb-4">
-                                <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
                                 <input type="fullname" id="fullname" name="fullname" required
                                        class="mt-1 w-full pl-3 pr-10 py-2 border-none bg-white shadow-sm focus:ring-2 focus:ring-primary focus:outline-none text-sm"
                                        placeholder="Enter full name" value="${user.getFullName()}">
+                            </div>
+                            <div class="mb-4">
+                                <label for="cccd" class="block text-sm font-medium text-gray-700">CCCD</label>
+                                <input type="cccd" id="cccd" name="cccd" required
+                                       class="mt-1 w-full pl-3 pr-10 py-2 border-none bg-white shadow-sm focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                                       placeholder="Enter CCCD" >
                             </div>
                             <div class="mb-4">
                                 <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>

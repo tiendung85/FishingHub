@@ -7,12 +7,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.Users" %>
-<link rel="stylesheet" href="<c:url value='/css/style.css'/>">
+
 <%
     Users currentUser = (Users) session.getAttribute("user");
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +25,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
         <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
     </head>
     <body>
 
@@ -77,7 +78,7 @@
                                    class=" py-1 text-gray-500 hover:text-primary hover:bg-gray-100 rounded transition text-sm">
                                     <i class="ri-list-unordered mr-2"></i>Danh sách sự kiện
                                 </a>
-                                
+
                             </div>
 
 
@@ -130,9 +131,9 @@
                             </p>
                         </div>
                     </div>
-                    
+
                     <div class="p-4">
-                        <a href="../Home.jsp" class="flex items-center justify-center w-full bg-primary text-white py-2 rounded-button font-medium hover:bg-primary/90 transition">
+                        <a href="./Home.jsp" class="flex items-center justify-center w-full bg-primary text-white py-2 rounded-button font-medium hover:bg-primary/90 transition">
                             <i class="ri-arrow-left-line mr-2"></i> Quay lại Trang Chủ
                         </a>
                     </div>
@@ -194,192 +195,178 @@
                     </div>
                 </div>
                 <!-- Main content area -->
-                <main class="pt-16 pb-6 px-4 max-w-5xl mx-auto">
-                    
-                    <div class="grid grid-cols-12 gap-4 my-6">
-                        <button
-                            class="col-span-12 sm:col-span-4 bg-white rounded-lg shadow-sm p-4 flex items-center hover:shadow-md transition-shadow whitespace-nowrap">
-                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                                <i class="ri-notification-3-line ri-lg text-primary"></i>
-                            </div>
-                            <span class="font-medium">Gửi thông báo</span>
-                        </button>
-                        <a href="#" data-readdy="true"
-                           class="col-span-12 sm:col-span-4 bg-white rounded-lg shadow-sm p-4 flex items-center hover:shadow-md transition-shadow whitespace-nowrap no-underline">
-                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                                <i class="ri-file-list-3-line ri-lg text-green-600"></i>
-                            </div>
-                            <span class="font-medium">Check-in</span>
-                        </a>
-                        <button
-                            class="col-span-12 sm:col-span-4 bg-white rounded-lg shadow-sm p-4 flex items-center hover:shadow-md transition-shadow whitespace-nowrap">
-                            <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mr-3">
-                                <i class="ri-information-line ri-lg text-amber-600"></i>
-                            </div>
-                            <span class="font-medium">Xem chi tiết sự kiện</span>
-                        </button>
+                <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-x-auto">
+                    <!-- Title -->
+                    <div class="mb-8">
+                        <h1 class="text-2xl font-bold text-gray-900">Danh sách người tham gia</h1>
+                        <p class="mt-2 text-sm text-gray-600">
+                            Theo dõi và quản lý người tham gia sự kiện của bạn
+                        </p>
                     </div>
-                    
-                    <section class="bg-white rounded shadow-sm p-6 mb-6">
-                        <div class="flex flex-wrap gap-4">
-                            <div class="w-full sm:w-auto flex-1 min-w-[240px]">
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                                        <i class="ri-search-line w-5 h-5"></i>
-                                    </div>
-                                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded text-sm"
-                                           placeholder="Tìm kiếm theo tên, email...">
+
+                    <form action="EventNotification" method="get" >
+                        <input type="hidden" name="action" value="sendinfo">
+                        <input type="hidden" name="eventId" value="${eventId}">
+                        <div class="grid grid-cols-12 gap-4 my-6">
+                            <button 
+                                class="col-span-12 sm:col-span-4 bg-white rounded-lg shadow-sm p-4 flex items-center hover:shadow-md transition-shadow whitespace-nowrap">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                    <i class="ri-notification-3-line ri-lg text-primary"></i>
+                                </div>
+                                <span class="font-medium">Gửi thông báo</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+
+                        <form method="get" action="EventParticipants"
+                              class="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-lg shadow-sm border border-gray-200 p-4 gap-2">
+                            <input type="hidden" name="action" value="search">
+                            <input type="hidden" name="eventId" value="${eventId}">
+                            <div class="relative flex-1">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-search-line text-gray-400"></i>
+                                </div>
+                                <input type="text" name="keyword"
+                                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-button text-sm placeholder-gray-400 focus:ring-2 focus:ring-primary focus:ring-opacity-20 focus:border-primary"
+                                       placeholder="Tìm theo tên, email, SĐT..." />
+                            </div>
+                            <button type="submit"
+                                    class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-button hover:bg-primary/90 transition">
+                                <i class="ri-search-line mr-2"></i> Tìm kiếm
+                            </button>
+                        </form>
+
+
+                        <form method="get" action="EventParticipants"
+                              class="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-lg shadow-sm border border-gray-200 p-4 gap-2 sm:w-auto w-full">
+                            <input type="hidden" name="action" value="filter">
+                            <input type="hidden" name="eventId" value="${eventId}">
+                            <div class="relative w-full sm:w-48">
+                                <select name="status"
+                                        class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-button appearance-none focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-20 focus:border-primary bg-white text-sm">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="1">Đã check-in</option>
+                                    <option value="0">Chưa check-in</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                    <i class="ri-arrow-down-s-line text-gray-400"></i>
                                 </div>
                             </div>
-                            <div class="flex flex-wrap gap-4 w-full sm:w-auto">
-                                <select class="px-4 py-2 border border-gray-300 rounded text-sm pr-8 w-full sm:w-auto">
-                                    <option>Tất cả trạng thái</option>
-                                    <option>Đã check-in</option>
-                                    <option>Chưa check-in</option>
-                                </select>
-                                
-                            </div>
-                        </div>
-                    </section>
+                            <button type="submit"
+                                    class="inline-flex items-center justify-center px-4 py-2 bg-secondary text-white text-sm font-medium rounded-button hover:bg-secondary/90 transition">
+                                <i class="ri-filter-line mr-2"></i> Lọc
+                            </button>
+                        </form>
+                    </div>
 
-                   
-
-                    <section class="bg-white rounded shadow-sm overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                         <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="bg-gray-50 border-b border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Họ và tên</th>
+                                            Họ và tên
+                                        </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Email</th>
+                                            CCCD
+                                        </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Số điện thoại</th>
+                                            Email
+                                        </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Trạng thái</th>
+                                            Số điện thoại
+                                        </th>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Thời gian check-in</th>
+                                            Trạng thái
+                                        </th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Thời gian check-in
+                                        </th>
                                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Thao tác
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div
-                                                    class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                                                    <i class="ri-user-line w-4 h-4"></i>
-                                                </div>
-                                                <div class="ml-3">
-                                                    <div class="text-sm font-medium text-gray-900">Nguyễn Thị Minh Trang
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <c:forEach var="o" items="${listEP}">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                                                        <i class="ri-user-line w-4 h-4"></i>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <div class="text-sm font-medium text-gray-900">${o.fullName}</div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">minhtrang@example.com
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0912345678</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Đã
-                                                check-in</span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/06/2025 08:45</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                            <button class="text-gray-400 hover:text-gray-600 !rounded-button">
-                                                <i class="ri-more-line w-8 h-8"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div
-                                                    class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                                                    <i class="ri-user-line w-4 h-4"></i>
-                                                </div>
-                                                <div class="ml-3">
-                                                    <div class="text-sm font-medium text-gray-900">Trần Đức Hoàng</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">hoang.tran@example.com
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654321</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Chưa
-                                                check-in</span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                            <button class="text-gray-400 hover:text-gray-600 !rounded-button">
-                                                <i class="ri-more-line w-8 h-8"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div
-                                                    class="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                                                    <i class="ri-user-line w-4 h-4"></i>
-                                                </div>
-                                                <div class="ml-3">
-                                                    <div class="text-sm font-medium text-gray-900">Phạm Thanh Hương</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">huong.pham@example.com
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0923456789</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Đã
-                                                check-in</span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/06/2025 08:50</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                            <button class="text-gray-400 hover:text-gray-600 !rounded-button">
-                                                <i class="ri-more-line w-8 h-8"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${o.cccd}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${o.email}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${o.numberPhone}</td>
+
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <c:if test="${o.checkin}">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Đã check in</span>
+                                                </c:if>
+                                                <c:if test="${!o.checkin}">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Chưa check in</span>
+                                                </c:if>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${o.checkinTime}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+
+                                                <c:if test="${!o.checkin}">
+                                                    <form method="get" action="EventParticipants">
+                                                        <input type="hidden" name="action" value="checkin"/>
+                                                        <input type="hidden" name="eventId" value="${eventId}"/>
+                                                        <input type="hidden" name="userId" value="${o.userId}"/>
+                                                        <button type="submit" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                                                            Check-in
+                                                        </button>
+                                                    </form>
+                                                </c:if>
+
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Pagination -->
-                        <div
-                            class="bg-white px-4 py-3 flex flex-wrap items-center justify-between border-t border-gray-200 sm:px-6">
-                            <div class="w-full sm:w-auto text-center sm:text-left">
-                                <p class="text-sm text-gray-700">Hiển thị <span class="font-medium">1</span> đến <span
-                                        class="font-medium">3</span> trong số <span class="font-medium">120</span> kết quả
-                                </p>
+
+                        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50">Trang trước</a>
+                                <a href="#" class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-button text-gray-700 bg-white hover:bg-gray-50">Trang sau</a>
                             </div>
-                            <div class="w-full sm:w-auto mt-4 sm:mt-0 flex justify-center sm:justify-end">
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <button
-                                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <i class="ri-arrow-left-s-line w-5 h-5"></i>
-                                    </button>
-                                    <button
-                                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</button>
-                                    <button
-                                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary text-sm font-medium text-white">2</button>
-                                    <button
-                                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</button>
-                                    <button
-                                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        <i class="ri-arrow-right-s-line w-5 h-5"></i>
-                                    </button>
-                                </nav>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        Hiển thị <span class="font-medium">1</span> đến <span class="font-medium">5</span> của <span class="font-medium">15</span> người tham gia
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">Trang trước</span>
+                                            <i class="ri-arrow-left-s-line"></i>
+                                        </a>
+                                        <a href="#" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</a>
+                                        <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</a>
+                                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                            <span class="sr-only">Trang sau</span>
+                                            <i class="ri-arrow-right-s-line"></i>
+                                        </a>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
                 </main>
+
             </div>
         </div>
     </body>

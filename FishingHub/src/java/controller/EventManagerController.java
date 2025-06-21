@@ -75,13 +75,23 @@ public class EventManagerController extends HttpServlet {
         } else {
             if (action == null) {
                 list = dao.getEvents(user.getUserId());
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+                for (Events e : list) {
+                    if (now.before(e.getStartTime())) {
+                        e.setEventStatus("Sắp diễn ra");
+                    } else if (now.after(e.getEndTime())) {
+                        e.setEventStatus("Đã kết thúc");
+                    } else {
+                        e.setEventStatus("Đang diễn ra");
+                    }
+                }
                 request.setAttribute("listE", list);
                 request.getRequestDispatcher("dashboard_owner/EventManager.jsp").forward(request, response);
 
-            }  else if (action.equals("search")) {
+            } else if (action.equals("search")) {
                 ArrayList<Events> allEvents = dao.getEvents(user.getUserId());
                 ArrayList<Events> resultList = new ArrayList<>();
-
+                Timestamp now = new Timestamp(System.currentTimeMillis());
                 if (search != null && !search.trim().isEmpty()) {
                     for (Events e : allEvents) {
                         if (e.getTitle().toLowerCase().contains(search.toLowerCase())) {
@@ -95,24 +105,43 @@ public class EventManagerController extends HttpServlet {
                 } else {
                     resultList = allEvents;
                 }
+                for (Events e : allEvents) {
+                    if (now.before(e.getStartTime())) {
+                        e.setEventStatus("Sắp diễn ra");
+                    } else if (now.after(e.getEndTime())) {
+                        e.setEventStatus("Đã kết thúc");
+                    } else {
+                        e.setEventStatus("Đang diễn ra");
+                    }
+                }
 
                 request.setAttribute("listE", resultList);
                 request.getRequestDispatcher("dashboard_owner/EventManager.jsp").forward(request, response);
             } else if (action.equals("filter")) {
-                String statusFilter = request.getParameter("status"); 
+                String statusFilter = request.getParameter("status");
                 ArrayList<Events> allEvents = dao.getEvents(user.getUserId());
                 ArrayList<Events> filteredEvents = new ArrayList<>();
 
                 Timestamp now = new Timestamp(System.currentTimeMillis());
 
                 for (Events e : allEvents) {
-                    if ("upcoming".equals(statusFilter) && e.getStartTime().after(now)) {
+                    if ("upcoming".equals(statusFilter) && e.getStartTime().after(now) && e.getStatus().equals("approved")) {
                         filteredEvents.add(e);
-                    } else if ("ended".equals(statusFilter) && e.getEndTime().before(now)) {
+                    } else if ("ended".equals(statusFilter) && e.getEndTime().before(now)&& e.getStatus().equals("approved")) {
                         filteredEvents.add(e);
                     } else if ("all".equals(statusFilter)) {
                         filteredEvents = allEvents;
                         break;
+                    }
+                }
+
+                for (Events e : allEvents) {
+                    if (now.before(e.getStartTime())) {
+                        e.setEventStatus("Sắp diễn ra");
+                    } else if (now.after(e.getEndTime())) {
+                        e.setEventStatus("Đã kết thúc");
+                    } else {
+                        e.setEventStatus("Đang diễn ra");
                     }
                 }
 

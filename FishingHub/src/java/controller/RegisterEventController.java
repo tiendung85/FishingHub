@@ -74,17 +74,17 @@ public class RegisterEventController extends HttpServlet {
                 } else if (dao.isUserRegistered(eventId, user.getUserId())) {
                     request.setAttribute("error", "Bạn đã đăng ký tham gia sự kiện này rồi.");
                 } else {
-                    
                     String phoneNumber = request.getParameter("phoneNumber");
                     String email = request.getParameter("email");
+                    String cccd = request.getParameter("cccd"); // Lấy CCCD nếu có
 
-                    
                     if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
                         request.setAttribute("error", "Số điện thoại không được để trống.");
                         loadEventList(request, user, dao);
                         request.getRequestDispatcher("Event.jsp").forward(request, response);
                         return;
                     }
+
                     if (email == null || email.trim().isEmpty()) {
                         request.setAttribute("error", "Email không được để trống.");
                         loadEventList(request, user, dao);
@@ -92,7 +92,6 @@ public class RegisterEventController extends HttpServlet {
                         return;
                     }
 
-                    
                     Pattern phonePattern = Pattern.compile("^0[0-9]{9}$");
                     if (!phonePattern.matcher(phoneNumber).matches()) {
                         request.setAttribute("error", "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại 10 chữ số bắt đầu bằng 0.");
@@ -101,7 +100,6 @@ public class RegisterEventController extends HttpServlet {
                         return;
                     }
 
-                    
                     Pattern emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
                     if (!emailPattern.matcher(email).matches()) {
                         request.setAttribute("error", "Email không hợp lệ.");
@@ -113,8 +111,9 @@ public class RegisterEventController extends HttpServlet {
                     EventParticipant ep = new EventParticipant();
                     ep.setEventId(eventId);
                     ep.setUserId(user.getUserId());
-                    ep.setNumberPhone(Integer.parseInt(phoneNumber)); 
+                    ep.setNumberPhone(phoneNumber);
                     ep.setEmail(email);
+                    ep.setCccd(cccd);
 
                     if (dao.register(ep) != null) {
                         request.setAttribute("success", "Đăng ký sự kiện thành công!");
@@ -122,6 +121,7 @@ public class RegisterEventController extends HttpServlet {
                         request.setAttribute("error", "Đăng ký sự kiện thất bại.");
                     }
                 }
+
             } else if ("cancel".equals(action)) {
                 if (!dao.isUserRegistered(eventId, user.getUserId())) {
                     request.setAttribute("error", "Bạn chưa đăng ký sự kiện này.");

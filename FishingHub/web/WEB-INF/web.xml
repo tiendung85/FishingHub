@@ -49,6 +49,14 @@
         <servlet-name>EventParticipantsController</servlet-name>
         <servlet-class>controller.EventParticipantsController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EventUpdateController</servlet-name>
+        <servlet-class>controller.EventUpdateController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EventNotificationController</servlet-name>
+        <servlet-class>controller.EventNotificationController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterController</servlet-name>
         <url-pattern>/Register</url-pattern>
@@ -100,6 +108,14 @@
     <servlet-mapping>
         <servlet-name>EventParticipantsController</servlet-name>
         <url-pattern>/EventParticipants</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EventUpdateController</servlet-name>
+        <url-pattern>/EventUpdate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EventNotificationController</servlet-name>
+        <url-pattern>/EventNotification</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Home.jsp</welcome-file>

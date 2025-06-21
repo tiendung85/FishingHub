@@ -89,14 +89,14 @@
             <form action="Event" method="post" id="createEventForm" enctype="multipart/form-data" 
                   class="w-full max-w-4xl bg-white p-10 rounded-lg shadow-md space-y-2">
 
-                <!-- Hiển thị thông báo thành công -->
+                
                 <% if (request.getAttribute("success") !=null) { %>
                 <div class="success bg-green-100 text-green-700 p-4 rounded mb-4" style="color: green;">
                     <%= request.getAttribute("success") %>
                 </div>
                 <% } %>
 
-                <!-- Hiển thị thông báo lỗi -->
+                
                 <% if (request.getAttribute("error") !=null) { %>
                 <div class="error bg-red-100 text-red-700 p-4 rounded mb-4" style="color: red;">
                     <%= request.getAttribute("error") %>

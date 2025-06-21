@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import model.Events;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import model.EventNotification;
 import model.EventParticipant;
 
 /**
@@ -46,7 +47,7 @@ public class EventDAO extends DBConnect {
             System.err.println("Error while fetching events: " + e.getMessage());
             e.printStackTrace();
         }
-        return events; 
+        return events;
     }
 
     public ArrayList<Events> getEvents(int userId) {
@@ -79,7 +80,93 @@ public class EventDAO extends DBConnect {
             System.err.println("Error while fetching events: " + e.getMessage());
             e.printStackTrace();
         }
-        return events; 
+        return events;
+    }
+
+    public ArrayList<EventParticipant> getParticipantsByEventId(int eventId) {
+        ArrayList<EventParticipant> participants = new ArrayList<>();
+        try {
+            String sql = """
+                       SELECT 
+                             u.FullName,
+                             ep.EventId,
+                             ep.UserId,
+                             ep.NumberPhone,
+                             ep.Email,
+                             ep.CCCD,
+                             ep.Checkin,
+                           ep.CheckinTime
+                         FROM 
+                             EventParticipant ep
+                         JOIN 
+                             Users u ON ep.UserId = u.UserId
+                         WHERE 
+                             ep.EventId = ?;""";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, eventId);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                EventParticipant p = new EventParticipant();
+                p.setFullName(rs.getString("FullName"));
+                p.setEventId(rs.getInt("EventId"));
+                p.setUserId(rs.getInt("UserId"));
+
+                p.setNumberPhone(rs.getString("NumberPhone"));
+                p.setEmail(rs.getString("Email"));
+                p.setCccd(rs.getString("CCCD"));
+                p.setCheckin(rs.getBoolean("Checkin"));
+                 p.setCheckinTime(rs.getTimestamp("CheckinTime"));
+                participants.add(p);
+            }
+        } catch (Exception e) {
+            System.err.println("Error while fetching participants: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return participants;
+    }
+
+    public ArrayList<EventParticipant> filterParticipantsByCheckin(int eventId, boolean checkinStatus) {
+        ArrayList<EventParticipant> participants = new ArrayList<>();
+        try {
+            String sql = """
+            SELECT u.FullName, ep.NumberPhone, ep.Email, ep.CCCD, ep.Checkin,ep.CheckinTime
+            FROM EventParticipant ep
+            JOIN Users u ON ep.UserId = u.UserId
+            WHERE ep.EventId = ? AND ep.Checkin = ?
+        """;
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, eventId);
+            statement.setBoolean(2, checkinStatus);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                EventParticipant p = new EventParticipant();
+                p.setFullName(rs.getString("FullName"));
+                p.setNumberPhone(rs.getString("NumberPhone"));
+                p.setEmail(rs.getString("Email"));
+                p.setCccd(rs.getString("CCCD"));
+                p.setCheckin(rs.getBoolean("Checkin"));
+                p.setCheckinTime(rs.getTimestamp("CheckinTime"));
+                participants.add(p);
+            }
+        } catch (Exception e) {
+            System.err.println("Error filtering participants: " + e.getMessage());
+        }
+        return participants;
+    }
+
+    public boolean updateCheckIn(int eventId, int userId) {
+        String sql = "UPDATE EventParticipant SET Checkin = 1, CheckinTime = GETDATE() WHERE EventId = ? AND UserId = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, eventId);
+            stmt.setInt(2, userId);
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Events getDetailsEvents(int id) {
@@ -111,7 +198,39 @@ public class EventDAO extends DBConnect {
             System.err.println("Error while fetching event details: " + e.getMessage());
             e.printStackTrace();
         }
-        return event; 
+        return event;
+    }
+
+    public Events getUpdateEvents(int id) {
+        Events event = null;
+        try {
+            String sql = "SELECT * FROM Event WHERE EventId=?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                event = new Events();
+                event.setEventId(rs.getInt("EventId"));
+                event.setTitle(rs.getString("Title"));
+                event.setDescription(rs.getString("Description"));
+                event.setLakeName(rs.getString("LakeName"));
+                event.setLocation(rs.getString("Location"));
+                event.setHostId(rs.getInt("HostId"));
+                event.setStartTime(rs.getTimestamp("StartTime"));
+                event.setEndTime(rs.getTimestamp("EndTime"));
+                event.setStatus(rs.getString("Status"));
+                event.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                event.setApprovedAt(rs.getTimestamp("ApprovedAt"));
+                event.setPosterUrl(rs.getString("PosterUrl"));
+                event.setMaxParticipants(rs.getInt("MaxParticipants"));
+                event.setCurrentParticipants(rs.getInt("CurrentParticipants"));
+            }
+        } catch (Exception e) {
+            System.err.println("Error while fetching event details: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return event;
     }
 
     public ArrayList<Events> getSavedEvents(int userId) {
@@ -161,7 +280,7 @@ public class EventDAO extends DBConnect {
             System.err.println("Error while fetching events: " + e.getMessage());
             e.printStackTrace();
         }
-        return events; 
+        return events;
     }
 
     public Events addEvent(Events event) {
@@ -193,23 +312,54 @@ public class EventDAO extends DBConnect {
         return null;
     }
 
+    public Events updateEvent(Events event) {
+        try {
+            String sql = "UPDATE Event SET Title = ?, LakeName = ?, Description = ?, Location = ?, "
+                    + "StartTime = ?, EndTime = ?, Status = ?, PosterUrl = ?, MaxParticipants = ?, CurrentParticipants = ? "
+                    + "WHERE EventId = ?";
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setString(1, event.getTitle());
+            statement.setString(2, event.getLakeName());
+            statement.setString(3, event.getDescription());
+            statement.setString(4, event.getLocation());
+            statement.setTimestamp(5, event.getStartTime());
+            statement.setTimestamp(6, event.getEndTime());
+            statement.setString(7, event.getStatus());
+            statement.setString(8, event.getPosterUrl());
+            statement.setInt(9, event.getMaxParticipants());
+            statement.setInt(10, event.getCurrentParticipants());
+            statement.setInt(11, event.getEventId());
+
+            int rs = statement.executeUpdate();
+            return rs > 0 ? event : null;
+
+        } catch (Exception e) {
+            System.err.println("Lỗi khi cập nhật sự kiện: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public EventParticipant register(EventParticipant ep) {
-        String insertParticipantSQL = "INSERT INTO EventParticipant (EventId, UserId,NumberPhone,Email) VALUES (?, ?,?,?)";
+        String insertParticipantSQL = "INSERT INTO EventParticipant (EventId, UserId,NumberPhone,Email,CCCD,Checkin) VALUES (?, ?,?,?,?,?)";
         String updateEventSQL = "UPDATE Event SET CurrentParticipants = CurrentParticipants + 1 WHERE EventId = ?";
 
         try {
-            connection.setAutoCommit(false); 
+            connection.setAutoCommit(false);
 
-            
             try (PreparedStatement participantStmt = connection.prepareStatement(insertParticipantSQL)) {
                 participantStmt.setInt(1, ep.getEventId());
                 participantStmt.setInt(2, ep.getUserId());
-                participantStmt.setInt(3, ep.getNumberPhone());
+                participantStmt.setString(3, ep.getNumberPhone());
                 participantStmt.setString(4, ep.getEmail());
+                participantStmt.setString(5, ep.getCccd());
+                participantStmt.setBoolean(6, ep.isCheckin());
                 int rowsAffected = participantStmt.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    
+
                     try (PreparedStatement eventStmt = connection.prepareStatement(updateEventSQL)) {
                         eventStmt.setInt(1, ep.getEventId());
                         eventStmt.executeUpdate();
@@ -221,7 +371,7 @@ public class EventDAO extends DBConnect {
             }
         } catch (Exception e) {
             try {
-                connection.rollback(); 
+                connection.rollback();
             } catch (Exception rollbackEx) {
                 System.err.println("Error during rollback: " + rollbackEx.getMessage());
                 rollbackEx.printStackTrace();
@@ -431,10 +581,29 @@ public class EventDAO extends DBConnect {
         return false;
     }
 
-    public static void main(String[] args) {
+    public EventNotification insertNotification(EventNotification notification) {
+        String sql = "INSERT INTO EventNotification (EventId, SenderId, Message,Title) OUTPUT INSERTED.NotificationId, INSERTED.CreatedAt VALUES (?, ?, ?,?)";
 
-        EventDAO dao = new EventDAO();
-        ArrayList<Events> li = dao.getSavedEvents(4);
-        System.out.println(li);
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, notification.getEventId());
+            ps.setInt(2, notification.getSenderId());
+            ps.setString(3, notification.getMessage());
+            ps.setString(4, notification.getTitle());
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+
+                notification.setNotificationId(rs.getInt("NotificationId"));
+                notification.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                return notification;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

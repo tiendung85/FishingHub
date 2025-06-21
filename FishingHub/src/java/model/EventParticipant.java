@@ -1,19 +1,17 @@
 package model;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+import java.sql.Timestamp;
 
-/**
- *
- * @author LENOVO
- */
 public class EventParticipant {
+
     private int eventId;
     private int userId;
-    private int numberPhone;
+    private String numberPhone;
     private String email;
+    private boolean checkin;
+    private String cccd;
+    private String fullName;
+    private Timestamp checkinTime; 
 
     public EventParticipant() {
     }
@@ -34,12 +32,28 @@ public class EventParticipant {
         this.userId = userId;
     }
 
-    public int getNumberPhone() {
+    public String getNumberPhone() {
         return numberPhone;
     }
 
-    public void setNumberPhone(int numberPhone) {
+    public void setNumberPhone(String numberPhone) {
         this.numberPhone = numberPhone;
+    }
+
+    public boolean isCheckin() {
+        return checkin;
+    }
+
+    public void setCheckin(boolean checkin) {
+        this.checkin = checkin;
+    }
+
+    public String getCccd() {
+        return cccd;
+    }
+
+    public void setCccd(String cccd) {
+        this.cccd = cccd;
     }
 
     public String getEmail() {
@@ -49,8 +63,20 @@ public class EventParticipant {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public Timestamp getCheckinTime() {
+        return checkinTime;
+    }
+
+    public void setCheckinTime(Timestamp checkinTime) {
+        this.checkinTime = checkinTime;
+    }
 }
-

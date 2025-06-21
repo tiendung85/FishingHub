@@ -7,7 +7,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="model.Users" %>
-<link rel="stylesheet" href="<c:url value='/css/style.css'/>">
+
 <%
     Users currentUser = (Users) session.getAttribute("user");
 %>
@@ -25,6 +25,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
         <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
     </head>
     <body>
 
@@ -268,7 +269,11 @@
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Trạng thái
+                                            Trạng thái thời gian
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Trạng thái duyệt
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -285,11 +290,8 @@
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
-                                                    <div
-                                                        class="flex-shrink-0 h-10 w-10 rounded bg-indigo-100 flex items-center justify-center">
-                                                        <i class="ri-calendar-event-fill text-primary"></i>
-                                                    </div>
-                                                    <div class="ml-4">
+
+                                                    <div >
                                                         <div class="text-sm font-medium text-gray-900">
                                                             ${o.title}
                                                         </div>
@@ -308,20 +310,53 @@
 
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Sắp
-                                                    diễn ra</span>
+                                                <c:choose>
+                                                    <c:when test="${o.eventStatus == 'Sắp diễn ra' && o.status == 'approved' }">
+                                                        <span
+                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-600">Sắp diễn ra
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${o.eventStatus == 'Đã kết thúc' && o.status == 'approved'}">
+                                                        <span
+                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Đã kết thúc
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${o.eventStatus == 'Đang diễn ra' && o.status == 'approved'}">
+                                                        <span
+                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Đang diễn ra
+                                                        </span>
+                                                    </c:when>
+                                                </c:choose>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <c:choose>
+                                                    <c:when test="${o.status == 'pending'}">
+                                                        <span
+                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Chờ duyệt
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${o.status == 'approved'}">
+                                                        <span
+                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Đã duyệt 
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${o.status == 'rejected'}">
+                                                        <span
+                                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Từ chối
+                                                        </span>
+                                                    </c:when>
+                                                </c:choose>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <button class="inline-flex items-center text-primary hover:text-primary/80"
                                                         data-event-id="1">
-                                                    <a href="EventParticipants"><span>${o.currentParticipants}/${o.maxParticipants}</span><i class="ri-eye-line ml-1"></i></a>
+                                                    <a href="EventParticipants?action=list&eventId=${o.eventId}"><span>${o.currentParticipants}/${o.maxParticipants}</span><i class="ri-eye-line ml-1"></i></a>
 
                                                 </button>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <div class="flex justify-end space-x-2">
-                                                    <button
+                                                    <button onclick="location.href='EventUpdate?action=event&eventId=${o.eventId}'"
                                                         class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
                                                         <i class="ri-edit-line text-blue-600"></i>
                                                     </button>
